@@ -1,5 +1,4 @@
 #逾期率指标计算
-```
 add jar /home/etl_ket_azk/app/jar/HiveUDF-1.0-SNAPSHOT.jar;
 create temporary function month_sub as 'com.guofei.month_sub';
 create temporary function month_add as 'com.guofei.month_add';
@@ -74,4 +73,3 @@ left join
 
 )n2
 on n1.chnl_code=n2.chnl_code
-```
