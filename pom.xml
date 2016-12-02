@@ -44,6 +44,19 @@
       <artifactId>spark-sql_2.10</artifactId>
       <version>1.6.0</version>
     </dependency>
+
+    <!-- elasticsearch -->
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch</artifactId>
+      <version>1.3.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch-spark-13_2.10</artifactId>
+      <version>5.0.1</version>
+    </dependency>
     <!-- 整合Hbase-->
     <dependency>
       <groupId>org.apache.hbase</groupId>
