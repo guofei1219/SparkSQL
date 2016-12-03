@@ -1,32 +1,41 @@
 package channel
 
-import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.{Row, SQLContext}
+import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.{SparkConf, SparkContext}
+import utils.DataUtils
 
 /**
   * 统计不同渠道进件数量
   * Created by Michael on 2016/11/29.
   */
-object Custmer_Statistics {
-
-  /**
-    * 使用模板类描述表元数据信息
-    * @param chnl_code
-    * @param id_num
-    */
-  case class blb_intpc_info(chnl_code:String,id_num:String)
+object Custmer_Statistics_StructType {
 
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setAppName("Custmer_Statistics").setMaster("local[2]")
+    val conf = new SparkConf().setAppName("Custmer_Statistics_StructType").setMaster("local[2]")
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
     //RDD隐式转换成DataFrame
     import sqlContext.implicits._
     //读取本地文件
-    val blb_intpc_infoDF = sc.textFile("C:/work/ideabench/SparkSQL/data/channel/blb_intpc_info_10000_2.txt")
+    val blb_intpc_infoRow = sc.textFile("C:/work/ideabench/SparkSQL/data/channel/blb_intpc_info_10000_2.txt")
       .map(_.split("\\t"))
-      .map(d => blb_intpc_info(d(0), d(1))).toDF()
+      .map(d => {
+        Row(d(0),d(1))
+      })
 
+    //Hive表字段元数据信息
+    val schemaString = DataUtils.getHiveMetaData("blb_intpc_info")
+    val schema =StructType(schemaString.split("\\t")
+      .map(fieldName => StructField(fieldName, StringType, true)))
+
+
+    val structTypes = StructType(Array(
+      StructField("chnl_code", StringType, true),
+      StructField("id_num", StringType, true)
+    ))
+
+    val blb_intpc_infoDF = sqlContext.createDataFrame(blb_intpc_infoRow,structTypes)
     //注册表
     blb_intpc_infoDF.registerTempTable("blb_intpc_info")
 
@@ -41,6 +50,24 @@ object Custmer_Statistics {
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
     case class blb_intpc_info(intpc_id:Int,presona_id:Int,client_id:Int,

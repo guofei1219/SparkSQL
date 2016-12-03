@@ -9,9 +9,9 @@ import java.sql.*;
  * Created by Michael on 2016/12/1.
  */
 public class DataUtils {
-    private static StringBuffer sb;
+    public static StringBuffer sb;
 
-    private static Connection getConn() {
+    public static Connection getConn() {
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://192.168.20.126:3306/hive";
         String username = "root";
@@ -28,7 +28,7 @@ public class DataUtils {
         return conn;
     }
 
-    private static String getHiveMetaData(String hiveTableName) {
+    public static String getHiveMetaData(String hiveTableName) {
         Connection conn = getConn();
         String sql = "SELECT\n" +
                 "  #TBLS.`TBL_NAME`,\n" +
@@ -45,7 +45,6 @@ public class DataUtils {
                 "  LEFT JOIN COLUMNS_V2 #字段信息表\n" +
                 "    ON CDS.CD_ID = COLUMNS_V2.CD_ID\n" +
                 "WHERE TBLS.`TBL_NAME` = \"gd_py_corp_sharehd_info\"";
-        //gd_py_corp_sharehd_info
         PreparedStatement pstmt;
         String result="";
         try {
@@ -56,8 +55,6 @@ public class DataUtils {
             while (rs.next()) {
                 for (int i = 1; i <= col; i++) {
                     result = result + rs.getString(i) + "\t";
-                    //System.out.println(rs.getString(i));
-                    //sb.append(rs.getString(i)).append("\t");
                 }
             }
 
